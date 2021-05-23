@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>ChatApp</title>
+    
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body style="background-color: whitesmoke;">
+    <div class="container-fluid header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <span class="btn-lg btn btn-dark mr-1" onclick='window.location = "index.html"'>ChatApp</span>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="messages.html">Messages</a>
+                </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="people.html">People</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="feedback.html">Report</a>
+                  </li>
+                <li class="nav-item dropdown active">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    About Us
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="https://github.com/DhruvDutta" target="_blank">Dhruv</a>
+                    <a class="dropdown-item" href="https://github.com/Kunwer" target="_blank">Kunwer</a>
+                </li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <span class="float-right h4 mr-3"><span class="" id="curr_user"  style = "padding-top: .35em;" ></span></span>
+                <span id="logout"><div class="btn btn-outline-danger" >Logout</div></span>
+                <span class="float-right h4" id='login-btn'  style = "padding-top: .35em;"><div class="btn btn-info" onclick="window.location='login.html'">Log In</div></span>
+              </ul>
+            </div>
+          </nav>
+    </div>
+    <div class="container mt-5" id="friends_main">
+        <div class="row ">
+            <div class="col-12 mt-3 col-sm-6 offset-sm-3 col-md-4 offset-md-4 fr mt-5">
+                <div class="row mt-2 d-flex justify-content-center">
+                    <div class="h2">Friend Requests</div>
+                </div>
+                <div class="row mt-4 p-2">
+                    <div class="col-12" id="Friend_requests">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12 col-sm-6 offset-sm-3 col-md-4 offset-md-4 fr">
+                <div class="row mt-2 d-flex justify-content-center ">
+                    <div class="h2 ">People You May Know</div>
+                </div>
+                <div class="row mt-4 p-2">
+                    <div class="col-12" id="peoplelist">
+                        
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!--start-->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-analytics.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
+    <!--end-->
+    <!--start-->
+    <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+        apiKey: "AIzaSyAUdGUWMRQf7ZFT_t1p4seCAgYI0VJPCOY",
+        authDomain: "chatapp-6ef08.firebaseapp.com",
+        databaseURL: "https://chatapp-6ef08.firebaseio.com",
+        projectId: "chatapp-6ef08",
+        storageBucket: "chatapp-6ef08.appspot.com",
+        messagingSenderId: "380852877187",
+        appId: "1:380852877187:web:848d46a84b1719ad2428b6",
+        measurementId: "G-Y0GZE3Y9ZY"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    var friendlist = [];
+    
+    document.getElementById('logout').addEventListener('click',logout=()=>{
+        firebase.auth().signOut().then(function() {
+            console.log('signed Out')
+            window.location = 'login.html';
+        }).catch(function(error) {
+            console.log('Error in Signout')
+        });
+    })
+    var current_user;
+    document.getElementById('login-btn').style.display = 'none';
+    document.getElementById('logout').style.display='none';
+    function show_people(){
+            document.getElementById('peoplelist').innerHTML = '';
+            firebase.database().ref(`users/${current_user}/friends`).on('child_added', function(childSnapshot) {
+            var childData = childSnapshot.key;
+            if(friendlist.includes(childData) == false ){
+                friendlist.push(childData);
+            }
+        });
+        firebase.database().ref('users').on('child_added', function(snapshot) {
+            var childData = snapshot.key;
+                if(childData != current_user && (friendlist.indexOf(childData) <0) ){
+                    document.getElementById('peoplelist').innerHTML+=`<div class="row p-3 pl-4">
+                        <div class="person col-10" >`+childData+`</div><i class="fas fa-user-plus float-right p-1" id="${childData}send_req" onclick="Send_Friend_req('${childData}')"></i></div>`;
+                    firebase.database().ref(`users/${current_user}/sent/${childData}`).on('child_added',function(){
+                    document.getElementById(`${childData}send_req`).style.color = '#ccc';
+                })
+            }    
+        })
+        }
+
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+        // User is signed in.
+        document.getElementById('logout').style.display='block';
+
+        current_user = user.displayName;
+        document.getElementById('login-btn').style.display = 'none';
+        document.getElementById('curr_user').innerText = current_user;
+        //show_friend_req()
+        firebase.database().ref(`users/${current_user}/requests`).on("child_added",function(childSnapshot){
+            //alert('you have a new Req')
+            var childData = childSnapshot.key;
+            document.getElementById('Friend_requests').innerHTML+=`<div class="row p-3 pl-4">
+                        <div class="person col-10" >`+childData+`</div><i class="fas fa-user-check  float-right p-1" onclick="accept_friend_req('${childData}')"></i></div>`;
+        })
+        //show_people()
+        
+        show_people();
+        firebase.database().ref(`users/${current_user}/sent`).on('child_removed', function(snapshot) {
+            firebase.database().ref('users').on('child_added', function(snapshot) {
+                document.getElementById('peoplelist').innerHTML = '';
+                var childData = snapshot.key;
+                    if(childData != current_user && (friendlist.indexOf(childData) <0) ){
+                        document.getElementById('peoplelist').innerHTML+=`<div class="row p-3 pl-4">
+                            <div class="person col-10" >`+childData+`</div><i class="fas fa-user-plus float-right p-1" id="${childData}send_req" onclick="Send_Friend_req('${childData}')"></i></div>`;
+                        firebase.database().ref(`users/${current_user}/sent/${childData}`).on('child_added',function(){
+                        document.getElementById(`${childData}send_req`).style.color = '#ccc';
+                    })
+                        }
+                
+        })
+        });
+
+        firebase.database().ref(`users/${current_user}/requests`).on("child_removed",function(childSnapshot){
+            show_friend_req();
+        })
+        // ...
+        }else{
+            window.location = 'login.html'
+            document.getElementById('logout').style.display='none';
+            document.getElementById('login-btn').style.display = 'block';
+
+            
+        }
+    });
+    
+    function Send_Friend_req(t){
+        firebase.database().ref(`users/${t}/requests/${current_user}`).set({
+            r:"",
+        })
+        firebase.database().ref(`users/${current_user}/sent/${t}`).set({
+            r:"",
+        })
+
+    }
+
+    function already_sent(){
+        firebase.database().ref(`users/${current_user}/sent`).on("child_added",function(childSnapshot){
+            var childData = childSnapshot.key;
+            document.getElementById(`${childData}send_req`).style.color = '#ccc';
+            })
+    }
+    function show_friend_req(){
+        document.getElementById('Friend_requests').innerHTML = '';
+        firebase.database().ref(`users/${current_user}/requests`).on("child_added",function(childSnapshot){
+            //alert('you have a new Req')
+            var childData = childSnapshot.key;
+            document.getElementById('Friend_requests').innerHTML+=`<tr class='row p-3 pl-4'>
+                <td class="person col-10" >
+                    `+childData+`
+                </td>
+                <td>
+                    <i class="fas fa-user-check  float-right p-1" onclick='accept_friend_req("${childData}")' style='color:black;cursor:pointer;'>
+                    </i>
+                </td>
+            </tr>`;
+        })
+    }
+    
+    function accept_friend_req(other_user){
+        firebase.database().ref(`users/${current_user}/requests/${other_user}`).remove();
+        firebase.database().ref(`users/${other_user}/requests/${current_user}`).remove();
+        firebase.database().ref(`users/${current_user}/sent/${other_user}`).remove();
+        firebase.database().ref(`users/${other_user}/sent/${current_user}`).remove();
+
+        firebase.database().ref(`users/${current_user}/friends/${other_user}`).set({
+            f:0,
+        })
+        firebase.database().ref(`users/${other_user}/friends/${current_user}`).set({
+            f:0,
+        })
+        show_people();
+    }
+</script>
+    <!--end-->
+    <script src="./js/script.js"></script>
+    <script src="https://kit.fontawesome.com/d5befc3ef6.js" crossorigin="anonymous"></script>
+    
+</body>
+</html>
+
